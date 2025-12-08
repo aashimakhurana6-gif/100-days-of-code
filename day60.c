@@ -1,0 +1,45 @@
+//Write a program to take an integer array arr and an integer k as inputs. The task is to find the maximum element in each subarray of size k moving from left to right. Print the maximum elements for each window separated by spaces as output.
+#include <stdio.h>
+
+int main() {
+    int n, k;
+
+    // Input size of array
+    printf("Enter size of array: ");
+    scanf("%d", &n);
+
+    int arr[n];
+
+    // Input array elements
+    printf("Enter %d elements:\n", n);
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    // Input k
+    printf("Enter value of k: ");
+    scanf("%d", &k);
+
+    // Edge case: if k > n
+    if (k > n) {
+        printf("Invalid: k cannot be greater than n\n");
+        return 0;
+    }
+
+    // Brute force to find max of each window
+    for (int i = 0; i <= n - k; i++) {
+        int max = arr[i];
+
+        // Check next k elements
+        for (int j = i; j < i + k; j++) {
+            if (arr[j] > max) {
+                max = arr[j];
+            }
+        }
+
+        // Print maximum for this window
+        printf("%d ", max);
+    }
+
+    return 0;
+}

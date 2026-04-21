@@ -1,52 +1,52 @@
-//Store multiple student records (name, roll number, marks) into a file using fprintf(). Then read them using fscanf() and display each record.
+//Given a weighted graph with n vertices, implement the Floyd-Warshall algorithm to compute the shortest distances between every pair of vertices. The graph may contain positive or negative edge weights, but it does not contain any negative weight cycles.
+
 #include <stdio.h>
 
+#define INF 1000000000  // Large value to represent infinity
+
 int main() {
-    FILE *fp;
-    int n, i;
-    char name[50];
-    int roll;
-    float marks;
-
-    // Open file in write mode to store student records
-    fp = fopen("students.txt", "w");
-    if (fp == NULL) {
-        printf("Error: Could not create file.\n");
-        return 1;
-    }
-
-    printf("Enter number of students: ");
+    int n;
     scanf("%d", &n);
 
-    // Input and write records to file
-    for (i = 0; i < n; i++) {
-        printf("\nStudent %d\n", i + 1);
-        printf("Enter name: ");
-        scanf(" %[^\n]", name); // Read full name with spaces
-        printf("Enter roll number: ");
-        scanf("%d", &roll);
-        printf("Enter marks: ");
-        scanf("%f", &marks);
+    int dist[n][n];
 
-        fprintf(fp, "%s %d %.2f\n", name, roll, marks);
+    // Input adjacency matrix
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            scanf("%d", &dist[i][j]);
+
+            // Replace -1 with INF (except diagonal)
+            if(dist[i][j] == -1 && i != j) {
+                dist[i][j] = INF;
+            }
+        }
     }
 
-    fclose(fp);
+    // Floyd-Warshall Algorithm
+    for(int k = 0; k < n; k++) {
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < n; j++) {
 
-    // Open file in read mode to display student records
-    fp = fopen("students.txt", "r");
-    if (fp == NULL) {
-        printf("Error: Could not open file.\n");
-        return 1;
+                if(dist[i][k] != INF && dist[k][j] != INF) {
+                    if(dist[i][j] > dist[i][k] + dist[k][j]) {
+                        dist[i][j] = dist[i][k] + dist[k][j];
+                    }
+                }
+
+            }
+        }
     }
 
-    printf("\nStored Student Records:\n");
-    printf("------------------------\n");
-    while (fscanf(fp, "%s %d %f", name, &roll, &marks) == 3) {
-        printf("Name: %s, Roll: %d, Marks: %.2f\n", name, roll, marks);
+    // Convert INF back to -1 and print result
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            if(dist[i][j] == INF)
+                printf("-1 ");
+            else
+                printf("%d ", dist[i][j]);
+        }
+        printf("\n");
     }
-
-    fclose(fp);
 
     return 0;
 }
